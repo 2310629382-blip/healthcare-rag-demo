@@ -161,7 +161,7 @@ def format_report_markdown(report: EvalReport, settings=None) -> str:
         lines += [""]
     lines += ["## 明细", "", "| # | 问题 | 类型 | 期望 | 实际 | 结果 |", "| --- | --- | --- | --- | --- | --- |"]
     for index, row in enumerate(report.details, start=1):
-        result = "✅" if row.get("是否通过", row.get("关键词命中", False)) else "❌"
+        result = "通过" if row.get("是否通过", row.get("关键词命中", False)) else "未通过"
         lines.append(
             f"| {index} | {row['问题']} | {row['类型']} | {row['期望']} | {row['实际']} | {result} |"
         )

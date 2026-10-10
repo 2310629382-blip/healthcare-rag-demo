@@ -4,19 +4,17 @@
 > 本地知识文档 → 中文分块 → **BM25 + TF-IDF 混合检索** → 引用溯源 → 抽取式 / 大模型生成，
 > 附带离线评估与医疗安全护栏。**不依赖任何付费服务即可离线跑通**。
 
-[![CI](https://github.com/2310629382-blip/healthcare-rag-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/2310629382-blip/healthcare-rag-demo/actions/workflows/ci.yml)
-![Python](https://img.shields.io/badge/python-3.10%2B-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+测试状态：GitHub Actions 已通过（Python 3.10 / 3.11 / 3.12），见 [Actions 运行记录](https://github.com/2310629382-blip/healthcare-rag-demo/actions/workflows/ci.yml)。
 
 ---
 
-## 🖼 界面预览
+## 界面预览
 
 ![社区康养知识库问答 Demo 界面](docs/images/demo.png)
 
 > 提问后会显示回答、检索耗时、引用来源（文档 · 小节 · 相似度）与检索明细分数。
 
-## ✨ 项目亮点
+## 项目亮点
 
 | 特性 | 说明 |
 | --- | --- |
@@ -29,7 +27,7 @@
 | 离线评估 | Hit@1 / Hit@K / MRR / 关键词覆盖率 / 拒答准确率，一条命令生成 Markdown 报告 |
 | 工程化 | 单元测试（pytest）+ GitHub Actions CI（Python 3.10/3.11/3.12）+ 类型标注 + 结构化日志友好的返回对象 |
 
-## 📊 当前评估结果
+## 当前评估结果
 
 评估集是自己构造的 19 条问题（16 条知识库内 + 3 条域外），见 `data/eval/questions.jsonl`：
 
@@ -42,42 +40,27 @@
 | 拒答准确率 | **1.000** | 域外问题被正确拒答的比例 |
 | 平均端到端耗时 | **3 ms** | 纯 CPU、本地检索 + 抽取式回答 |
 
-> ⚠️ 这是**小规模自建评估集**上的结果，只代表当前知识库与当前参数配置；换成别的知识库后需要重新校准阈值。
+> 注意：这是**小规模自建评估集**上的结果，只代表当前知识库与当前参数配置；换成别的知识库后需要重新校准阈值。
 
-## 🏗 技术架构
+## 技术架构
 
+```mermaid
+flowchart TD
+    A["data/knowledge/*.md<br/>康养科普文档"] --> B["loader.py<br/>解析标题与小节"]
+    B --> C["chunker.py<br/>中文分块：切句、按长度打包、保留重叠"]
+    C --> D["retrieval.py<br/>BM25 + TF-IDF（词级 + 字级）混合检索"]
+    D --> E{"相似度 >= 阈值<br/>且查询词覆盖率 >= 阈值"}
+    E -- 否 --> F["safety.py<br/>明确拒答，建议咨询社区医生"]
+    E -- 是 --> G["generator.py<br/>抽取式（默认）或大模型（可选）"]
+    G --> H["app.py / ask.py<br/>带引用来源的回答"]
 ```
-                  ┌───────────────────────────────┐
-                  │ data/knowledge/*.md           │  康养科普文档（9 篇，可自行扩充）
-                  └───────────────┬───────────────┘
-                                  │ loader.py：解析标题 / 小节
-                                  ▼
-                  ┌───────────────────────────────┐
-                  │ chunker.py：中文分块           │  标点切句 → 目标长度打包 → 重叠 60 字
-                  └───────────────┬───────────────┘
-                                  ▼
-      ┌──────────────────────────────────────────────────────┐
-      │ retrieval.py：HybridRetriever                        │
-      │   BM25(Okapi，关键词)   ┐                             │
-      │   TF-IDF(jieba 词级)    ├─► 归一化 → 加权融合 → 0~1 分 │
-      │   TF-IDF(字符 2-3 gram) ┘                             │
-      └───────────────┬──────────────────────────────────────┘
-                      ▼
-      ┌───────────────────────────────┐   分数 < 阈值 或 覆盖率 < 阈值
-      │ safety.py：安全 + 拒答护栏     │ ─────────────────────────► 明确拒答
-      └───────────────┬───────────────┘
-                      ▼
-      ┌───────────────────────────────┐
-      │ generator.py                  │   抽取式（默认，离线可跑）
-      │                               │   大模型（可选，OpenAI 兼容接口）
-      └───────────────┬───────────────┘
-                      ▼
-      app.py（Streamlit 网页） / ask.py（命令行） → 带引用的回答
-```
+
+数据流：data/knowledge -> loader.py -> chunker.py -> retrieval.py（BM25 + TF-IDF）
+-> 安全与拒答护栏 -> generator.py -> app.py / ask.py
 
 详细设计见 [`docs/architecture.md`](docs/architecture.md) 与 [`docs/design-notes.md`](docs/design-notes.md)。
 
-## 🚀 快速开始
+## 快速开始
 
 ### 1. 环境要求
 
@@ -139,7 +122,7 @@ pip install -r requirements-dev.txt
 pytest -q
 ```
 
-## ⚙️ 配置说明
+## 配置说明
 
 复制 `.env.example` 为 `.env` 后按需修改（`.env` 已在 `.gitignore` 中，不会泄露密钥）：
 
@@ -169,7 +152,7 @@ LLM_API_KEY=ollama
 LLM_MODEL=qwen2.5:7b
 ```
 
-## 📁 目录结构
+## 目录结构
 
 ```
 healthcare-rag-demo/
@@ -194,7 +177,7 @@ healthcare-rag-demo/
 └── reports/                    # 评估报告输出目录
 ```
 
-## 🧠 设计要点
+## 设计要点
 
 1. **为什么用混合检索而不是直接上向量库？**
    小规模知识库上，BM25 对「高血压」「跌倒」这类关键词命中精准且完全可解释；中文没有天然空格，
@@ -213,7 +196,7 @@ healthcare-rag-demo/
 5. **评估为什么要带域外问题？**
    只测「能不能回答」是不够的，还要测「该不该回答」。评估集里刻意放了 3 条与康养无关的问题。
 
-## 🔍 已知局限
+## 已知局限
 
 - 知识库只有 9 篇科普文档，覆盖的疾病与场景有限；
 - 纯关键词检索对**口语化表达**（例如把「食盐摄入」说成「吃盐」）召回不足，
@@ -221,7 +204,7 @@ healthcare-rag-demo/
 - 拒答阈值是在当前评估集上校准的，换知识库后需要重新调参；
 - 知识库内容来自公开健康科普资料的整理，**仅用于技术演示**，不是医学建议。
 
-## 🗺 后续计划
+## 后续计划
 
 - [ ] 加入向量检索（`sentence-transformers` / BGE-small-zh）并与 BM25 做混合与对比实验
 - [ ] 加入 Rerank（Cross-Encoder 或 bge-reranker）提升 Top-1
@@ -232,11 +215,11 @@ healthcare-rag-demo/
 
 详见 [`docs/roadmap.md`](docs/roadmap.md)。
 
-## ⚠️ 免责声明
+## 免责声明
 
 本项目仅用于技术学习与知识科普演示，知识库内容整理自公开健康科普资料，**不能替代医生面诊、诊断和处方**。
 如有身体不适请及时就医；出现胸痛、意识不清、一侧肢体无力、大出血等急症信号，请立即拨打 120。
 
-## 📄 License
+## License
 
 [MIT](LICENSE)

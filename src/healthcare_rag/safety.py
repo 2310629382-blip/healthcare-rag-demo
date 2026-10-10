@@ -25,7 +25,7 @@ EMERGENCY_KEYWORDS = [
 ]
 
 EMERGENCY_MESSAGE = (
-    "⚠️ 你描述的情况可能是需要立即处理的急诊信号：**请马上拨打 120 或让家人陪同前往最近的急诊**，"
+    "【紧急提醒】你描述的情况可能是需要立即处理的急诊信号：**请马上拨打 120 或让家人陪同前往最近的急诊**，"
     "不要自行加药、停药或在家观察。以下内容仅为知识库中的一般性科普，不能用于急救判断。"
 )
 
@@ -56,7 +56,7 @@ def check_question(question: str) -> SafetyHint:
     if dose_like:
         return SafetyHint(
             level="caution",
-            message="💊 具体用药方案请以医生处方和药品说明书为准，下面是知识库中的一般性提醒。",
+            message="【用药提醒】具体用药方案请以医生处方和药品说明书为准，下面是知识库中的一般性提醒。",
         )
 
     return SafetyHint(level="", message="")

@@ -2,22 +2,30 @@
 
 ## 1. 整体数据流
 
+```mermaid
+flowchart TD
+    Q["用户问题"] --> S["safety.check_question()<br/>急症 / 用药规则检查"]
+    Q --> R["HybridRetriever.search()"]
+    R --> T["tokenize()：jieba 分词 + 停用词"]
+    T --> B1["BM25（Okapi）关键词稀疏检索"]
+    T --> B2["TF-IDF 词级 + 字级 2-3 gram"]
+    B1 --> F["归一化加权融合：0~1 分 + 查询词覆盖率"]
+    B2 --> F
+    F --> D{"分数 < MIN_SCORE<br/>或覆盖率 < MIN_COVERAGE"}
+    D -- 是 --> X["明确拒答"]
+    D -- 否 --> G["ExtractiveGenerator / LLMGenerator<br/>生成带编号引用的回答"]
+    G --> O["RAGResult：回答 + 引用 + 检索明细 + 耗时"]
+```
+
+上图的文字版流程：
+
 ```
 用户问题
-   │
-   ├─► safety.check_question()          规则安全检查（急症 / 用药）
-   │
-   ├─► HybridRetriever.search()         混合检索
-   │      ├─ tokenize()                 jieba 分词 + 停用词
-   │      ├─ BM25.score()               Okapi BM25，关键词稀疏检索
-   │      ├─ TF-IDF(词级) + TF-IDF(字级 2-3 gram)
-   │      └─ 归一化加权融合 → 0~1 分 + 查询词覆盖率
-   │
-   ├─► 拒答判断                          分数 < MIN_SCORE 或 覆盖率 < MIN_COVERAGE
-   │
-   ├─► ExtractiveGenerator / LLMGenerator   生成回答（带 [编号] 引用）
-   │
-   └─► RAGResult                       回答 + 引用 + 检索明细 + 耗时 + 安全检查结果
+  -> safety.check_question()      规则安全检查（急症 / 用药）
+  -> HybridRetriever.search()     混合检索（BM25 + TF-IDF + 覆盖率）
+  -> 拒答判断（阈值 / 覆盖率）      不通过则明确拒答
+  -> 生成回答（抽取式 / 大模型）    带 [编号] 引用
+  -> RAGResult                    回答 + 引用 + 检索明细 + 耗时
 ```
 
 ## 2. 模块职责

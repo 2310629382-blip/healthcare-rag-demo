@@ -20,7 +20,7 @@ from healthcare_rag.loader import load_documents  # noqa: E402
 from healthcare_rag.pipeline import HealthcareRAG  # noqa: E402
 from healthcare_rag.safety import DISCLAIMER  # noqa: E402
 
-st.set_page_config(page_title="社区康养知识库问答 Demo", page_icon="🏥", layout="wide")
+st.set_page_config(page_title="社区康养知识库问答 Demo", layout="wide")
 
 EXAMPLES = [
     "老年人每天吃多少盐比较合适？",
@@ -73,7 +73,7 @@ def render_citations(citations) -> None:
 base_settings = Settings.from_env()
 
 with st.sidebar:
-    st.title("🏥 康养问答")
+    st.title("康养问答")
     st.caption("社区康养知识库 RAG Demo")
     st.divider()
     st.subheader("参数设置")
@@ -113,7 +113,7 @@ st.caption(
     "基于本地康养知识文档的检索增强问答（RAG）：BM25 + TF-IDF 混合检索 → 引用溯源 → 抽取式 / 大模型生成。"
 )
 
-tab_qa, tab_kb, tab_eval, tab_about = st.tabs(["💬 问答演示", "📚 知识库", "📊 检索评估", "ℹ️ 关于"])
+tab_qa, tab_kb, tab_eval, tab_about = st.tabs(["问答演示", "知识库", "检索评估", "关于"])
 
 # --------------------------------------------------------------------- 问答页
 with tab_qa:
@@ -147,7 +147,7 @@ with tab_qa:
 
     for result in st.session_state.history:
         st.divider()
-        st.markdown(f"**🙋 提问：** {result.question}")
+        st.markdown(f"**提问：** {result.question}")
         col1, col2, col3, col4 = st.columns(4)
         col1.metric("耗时", f"{result.latency_ms:.0f} ms")
         col2.metric("命中片段", len(result.retrieved))
@@ -158,7 +158,7 @@ with tab_qa:
         if result.note:
             st.caption(f"备注：{result.note}")
         if result.retrieved:
-            with st.expander("🔍 检索明细（分数 / 关键词）"):
+            with st.expander("检索明细（分数 / 关键词）"):
                 st.dataframe(
                     [
                         {
@@ -181,7 +181,7 @@ with tab_kb:
     st.markdown("#### 知识库文档")
     st.caption(f"共 {len(get_documents(str(base_settings.knowledge_dir)))} 篇，全部放在 `data/knowledge/` 目录下，可直接新增 Markdown 文件扩充知识。")
     for doc in get_documents(str(base_settings.knowledge_dir)):
-        with st.expander(f"📄 {doc['title']}（{doc['sections']} 个小节 · {doc['source']}）"):
+        with st.expander(f"{doc['title']}（{doc['sections']} 个小节 · {doc['source']}）"):
             st.markdown(doc["content"])
 
 # ------------------------------------------------------------------- 评估页
@@ -192,7 +192,7 @@ with tab_eval:
         "指标：Hit@1、Hit@K、MRR、关键词覆盖率、拒答准确率。"
     )
     eval_k = st.slider("评估使用的 K", 1, 5, 3, key="eval_k")
-    if st.button("▶️ 运行评估（使用当前侧边栏参数）", type="primary"):
+    if st.button("运行评估（使用当前侧边栏参数）", type="primary"):
         items = load_eval_set()
         progress_bar = st.progress(0.0, text="评估中…")
 
@@ -209,7 +209,7 @@ with tab_eval:
         st.metric("平均耗时", f"{report.avg_latency_ms:.0f} ms")
         st.dataframe(report.details, use_container_width=True, hide_index=True)
         st.download_button(
-            "⬇️ 下载 Markdown 报告",
+            "下载 Markdown 报告",
             data=format_report_markdown(report, pipeline.settings).encode("utf-8"),
             file_name="eval_report.md",
             mime="text/markdown",
