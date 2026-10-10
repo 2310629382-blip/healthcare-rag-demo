@@ -1,0 +1,19 @@
+{"question": "老年人每天吃多少盐比较合适？", "expected_docs": ["高血压日常管理"], "keywords": ["5 克", "5克", "食盐"]}
+{"question": "家里老人有高血压，在家怎么测血压才准确？", "expected_docs": ["高血压日常管理"], "keywords": ["5 分钟", "安静休息"]}
+{"question": "血压正常了能不能自己把降压药停掉？", "expected_docs": ["高血压日常管理"], "keywords": ["不要", "停药"]}
+{"question": "糖尿病病人吃饭的顺序有讲究吗？", "expected_docs": ["2型糖尿病饮食与运动"], "keywords": ["蔬菜"]}
+{"question": "老人运动时突然心慌出汗手抖，是不是低血糖？", "expected_docs": ["2型糖尿病饮食与运动"], "keywords": ["低血糖", "15"]}
+{"question": "糖尿病患者可以吃水果吗，吃多少？", "expected_docs": ["2型糖尿病饮食与运动"], "keywords": ["水果", "150"]}
+{"question": "卫生间怎么改造能减少老人摔倒？", "expected_docs": ["老年人跌倒预防与居家改造"], "keywords": ["扶手", "防滑"]}
+{"question": "老人摔倒了应该马上扶起来吗？", "expected_docs": ["老年人跌倒预防与居家改造"], "keywords": ["不要", "骨折"]}
+{"question": "老年人为什么容易肌肉减少，怎么预防肌少症？", "expected_docs": ["老年膳食营养与肌少症预防"], "keywords": ["蛋白质"]}
+{"question": "老人晚上总是睡不好，有什么改善睡眠的方法？", "expected_docs": ["睡眠与心理健康"], "keywords": ["午睡", "起床时间"]}
+{"question": "长期吃安眠药对老人有什么风险？", "expected_docs": ["睡眠与心理健康"], "keywords": ["跌倒"]}
+{"question": "家里老人同时吃很多种药，要注意什么？", "expected_docs": ["用药安全与多重用药"], "keywords": ["清单", "相互作用"]}
+{"question": "冬天老年人养生要注意哪些方面？", "expected_docs": ["中医养生与四季调护"], "keywords": ["保暖", "冬"]}
+{"question": "脑卒中以后在家里怎么做康复训练？", "expected_docs": ["康复训练与关节保护"], "keywords": ["康复"]}
+{"question": "膝关节不好的人平时应该少做哪些动作？", "expected_docs": ["康复训练与关节保护"], "keywords": ["爬楼", "体重"]}
+{"question": "社区卫生服务中心能为老年人提供哪些服务？", "expected_docs": ["社区康养服务与就医指引"], "keywords": ["体检", "家庭医生"]}
+{"question": "去哪个平台能买到便宜的美国股票？", "expected_docs": [], "should_refuse": true}
+{"question": "帮我写一份 Java 后端的求职简历模板", "expected_docs": [], "should_refuse": true}
+{"question": "最近有什么好看的科幻电影推荐吗？", "expected_docs": [], "should_refuse": true}

@@ -1,0 +1,17 @@
+[project]
+name = "healthcare-rag-demo"
+version = "0.1.0"
+description = "社区康养知识库问答 Demo：BM25 + TF-IDF 混合检索的 RAG 学习项目"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "healthcare-rag-demo contributors" }]
+keywords = ["rag", "retrieval", "bm25", "tf-idf", "healthcare", "streamlit"]
+
+[project.urls]
+Homepage = "https://github.com/"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]

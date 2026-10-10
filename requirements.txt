@@ -1,0 +1,6 @@
+# 运行 Demo 需要的依赖（Python 3.10+）
+streamlit==1.37.1
+scikit-learn==1.5.1
+numpy==1.26.4
+jieba==0.42.1
+requests==2.32.3
